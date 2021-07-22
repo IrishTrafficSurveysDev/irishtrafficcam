@@ -130,11 +130,8 @@ sudo jetson_clocks
   - 🔘 [Use Custom Neural Network weights for Object Detection](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Using-Custom-NN-Weights.md)
 
 ### 📋 Customization Task List
-- [x] Set Jetson TX2 to perform at its highest performance settings when running OpenDataCam
-- [x] Fork darknet and customize it to support CuDNN for Jetson TX2 
-- [x] Change Default model from `yolov4` to `yolov4-csp` for better speed & accuracy 
 
-- 🔘 You can view the whole customization Kanban Board [here](https://github.com/IrishTrafficSurveysDev/Irish-Traffic-Cam-Guide/projects/2)
+- 🔘 You can view the whole customization Kanban Board [here](https://trello.com/b/WeGYpGVH/irish-traffic-cam), which outlines what tasks need to be done for further customization and optimization of IrishTrafficCam
 
 
 ##  🎥 Resources
