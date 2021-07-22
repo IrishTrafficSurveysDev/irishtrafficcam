@@ -66,7 +66,7 @@
   7. 🔘 `yolo-v4`(416x416)
   8. 🔘 `yolov4-tiny`(416x416)
 
-- However, tihs does not mean that `yolov4-p6` is the is the best model for all tasks at hand. It has proved to be most accurate for **fasty-moving cars** in videos, but for slower videos, `yolov4-p5` or `yolov4-csp-x-swish` may be better suited, as there is faster inference time. So, before configuring YOLO, be sure to try out various models. If ever unsure, we recommend sticking with the default
+- However, tihs does not mean that `yolov4-p6` is the is the best model for all tasks at hand. It has proved to be most accurate for **fast-moving cars** in videos, but for slower videos, `yolov4-p5` or `yolov4-csp-x-swish` may be better suited, as there is faster inference time. So, before configuring YOLO, be sure to try out various models. If ever unsure, we recommend sticking with the default
 -  To find out more about other models and choosing your own custom YOLO model, please see the section of the documentation on [using Custom Neural Network weights for Object Detection](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Using-Custom-NN-Weights.md)
 
 #### 💢 (Optional,  only for Part 2 - Option A) Setting the Jetson TX2 to its highest performance setting for running IrishTrafficCam
