@@ -8,6 +8,7 @@ This is an  experimental fork that aims to replace Darknet with the Deepstream S
 - There are 2 essential parts to this guide:
   - Part 1 of this guide will outline the necessary steps needed to flash [Jetpack SDK](https://developer.nvidia.com/embedded/jetpack) onto Jetson TX2, which is required in order to run IrishTrafficCam
   - Part 2 of this guide will outline the necessary steps needed to integrate Deepstream with IrishTrafficCam
+  - Part 3 of this guide outlines the necessary steps needed to install & run IrishTrafficCam on a Jetson TX2 without deepstream & with CuDNN enabled
 
 ## ⚡️ Part 1 - Flashing Jetpack onto Jetson TX2
 
@@ -311,3 +312,116 @@ CPPSRCDIR   = src_cpp
 	App run successful
 	GST_ARGUS:
 	PowerServiceHwVic::cleanupResources
+
+
+## ☄️ Part 3: Installing and running IrishTrafficCam with Deepstream
+
+### 1. Install node.js, mongodb
+
+```bash
+# Install node.js
+sudo apt-get install curl
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+#### Mongodb for Jetson devices (ARM64):
+
+```bash
+# Install mongodb
+
+# Detailed doc: https://computingforgeeks.com/how-to-install-latest-mongodb-on-ubuntu-18-04-ubuntu-16-04/
+# NB: at time of writing this guide, we install the mongodb package for ubuntu 16.04 as the arm64 version of it isn't available for 18.04
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+sudo apt-get update
+sudo apt-get install -y openssl libcurl3 mongodb-org
+
+# Start service
+sudo systemctl start mongod
+
+# Enable service on boot
+sudo systemctl enable mongod
+```
+
+#### Mongodb for Generic Ubuntu machine with CUDA GPU:
+
+```bash
+# Install mongodb
+
+# Detailed doc: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+sudo apt-get update && apt-get install -y --no-install-recommends openssl libcurl3 mongodb-org
+
+# Start service
+sudo systemctl start mongod
+
+# Enable service on boot
+sudo systemctl enable mongod
+```
+
+### 2. Install opendatacam-/irishtrafficcam
+
+
+- 🔵 Download source:
+
+
+    ```bash
+    git clone --single-branch --branch deepstream_test https://github.com/IrishTrafficSurveysDev/irishtrafficcam.git
+    cd opendatacam
+    ```
+
+- 🔵 Modify the `config.json` file appropriately:
+
+``` json
+
+  "OPENDATACAM_VERSION": "3.0.1",
+  "PATH_TO_YOLO" : "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/",
+  "DEEPSTREAM_CONFIG_FILE": "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_uri.txt",
+  "RECORDINGS_PATH": "/path/to/store/recordings",
+
+```
+
+    ```
+- 🔵 Install  **IrishTrafficCam**
+
+```bash
+cd <path/to/irish-traffic-cam>
+npm install
+npm run build
+```
+
+- 🔵 Run **IrishTrafficCam**
+
+```bash
+cd <path/to/irish-traffic-cam>
+npm run start
+```
+
+- 🔵 (optional) Config **IrishTrafficCam** to run on boot
+
+```bash
+# install pm2
+npm install pm2 -g |
+
+# go to opendatacam/irishtrafficcam folder
+cd  <path/to/irish-traffic-cam>
+# launch pm2 at startup
+# this command gives you instructions to configure pm2 to
+# start at ubuntu startup, follow them
+sudo pm2 startup
+
+# Once pm2 is configured to start at startup
+# Configure pm2 to start the Irish Traffic Cam app
+sudo pm2 start npm --name "irishtrafficcam" -- start
+sudo pm2 save
+```
+
+- 🔵 (optional) Open ports 8080 8090 and 8070 to outside world on cloud deployment machine
+
+```
+sudo ufw allow 8080
+sudo ufw allow 8090
+sudo ufw allow 8070
+```
