@@ -616,6 +616,10 @@ module.exports = {
     
   },
 
+  setRecordingFilename(fname) {
+   Opendatacam.recordingStatus.filename = fname
+  },
+
   setVideoResolution(videoResolution) {
     var self = this;
     console.log('setvideoresolution')

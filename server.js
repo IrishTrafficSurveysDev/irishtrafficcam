@@ -985,10 +985,11 @@ app.prepare()
       YOLO.stop().then(() => {
         console.log('YOLO stopped');
         // TODO set run on file
-        console.log(req.file.path);
+	console.log(Opendatacam);
+	console.log('________');
         YOLO.init(false, req.file.path);
         YOLO.start();
-        Opendatacam.recordingStatus.filename = req.file.filename;
+        Opendatacam.setRecordingFilename(req.file.filename)
       },(error) => {
         console.log('YOLO does not stop')
         console.log(error);
