@@ -12,6 +12,9 @@ const {
   performance
 } = require('perf_hooks');
 
+const rtspURL = 'rtsp://localhost:8020/ds-test';
+const ffmpegURL = 'http://localhost:8090/monitoring1.ffm'
+
 let YOLO = {
   isStarting: false,
   isStarted: false,
@@ -23,31 +26,47 @@ let YOLO = {
   currentVideoParams: ""
 };
 
+let ffserver = {
+  isStarting: false,
+  isStarted: false,
+  isInitialized: false,
+  process: null,
+  simulationMode: false,
+};
+
+let ffmpeg = {
+  isStarting: false,
+  isStarted: false,
+  isInitialized: false,
+  process: null,
+  simulationMode: false,
+};
+
 module.exports = {
   init: function(simulationMode, videoParams = null) {
 
     YOLO.simulationMode = simulationMode;
 
     if(!YOLO.simulationMode) {
-      var yoloParams = config.NEURAL_NETWORK_PARAMS[config.NEURAL_NETWORK];
-      var videoParams = videoParams || config.VIDEO_INPUTS_PARAMS[config.VIDEO_INPUT];
-      YOLO.currentVideoParams = videoParams
 
-      var darknetCommand = [];
-      var initialCommand = ['./darknet','detector','demo', yoloParams.data , yoloParams.cfg, yoloParams.weights]
-      var endCommand = ['-ext_output','-dont_show', '-dontdraw_bbox','-json_port', configHelper.getJsonStreamPort() , '-mjpeg_port', configHelper.getMjpegStreamPort()]
 
-      // Special case if input camera is specified as a -c flag as we need to add one arg
-      if(videoParams.indexOf('-c') === 0) {
-        darknetCommand = initialCommand.concat(videoParams.split(" ")).concat(endCommand);
-      } else {
-        darknetCommand = initialCommand.concat(videoParams).concat(endCommand);
-      }
+      ffserver.process = new (forever.Monitor)(['ffserver'],{
+        max: 1,
+        cwd: config.PATH_TO_YOLO,
+        silent: true,
+        killTree: true
+      });
 
-      YOLO.process = new (forever.Monitor)(darknetCommand,{
+     ffmpeg.process = new (forever.Monitor)(['ffmpeg', '-i', rtspURL, ffmpegURL], {
         max: Number.POSITIVE_INFINITY,
-        cwd: config.PATH_TO_YOLO_DARKNET,
-        env: { 'LD_LIBRARY_PATH': './' },
+        cwd: config.PATH_TO_YOLO,
+        killTree: true,
+        silent: true
+      });
+ 
+     YOLO.process = new (forever.Monitor)(['../apps/sample_apps/deepstream-app/deepstream-app2', '-c', config.DEEPSTREAM_CONFIG_FILE], {
+        max: Number.POSITIVE_INFINITY,
+        cwd: config.PATH_TO_YOLO,
         killTree: true
       });
 
@@ -71,6 +90,59 @@ module.exports = {
         console.log('Process YOLO exit');
         //console.log(err);
       });
+
+      ffserver.process.on("start", () => {
+        console.log('Process ffserver started');
+        ffserver.isStarted = true;
+        ffserver.isStarting = false;
+      });
+
+      ffserver.process.on("stop", () => {
+        console.log('Process ffserver stopped');
+        ffserver.isStarted = false;
+      });
+
+      ffserver.process.on("restart", () => {
+        // Forever 
+        console.log("Restart ffserver");
+      })
+
+      ffserver.process.on("error", (err) => {
+        console.log('Process ffserve error');
+        console.log(err);
+      });
+
+      ffserver.process.on("exit", (err) => {
+        console.log('Process ffserver exit');
+        console.log(err);
+      });
+
+      ffmpeg.process.on("start", () => {
+        console.log('Process ffmpeg started');
+        ffmpeg.isStarted = true;
+        ffmpeg.isStarting = false;
+      });
+
+      ffmpeg.process.on("stop", () => {
+        console.log('Process ffmpeg stopped');
+        ffmpeg.isStarted = false;
+      });
+
+      ffmpeg.process.on("restart", () => {
+        // Forever 
+        console.log("Restart ffmpeg");
+      })
+
+      ffmpeg.process.on("error", (err) => {
+        console.log('Process ffmpeg error');
+        console.log(err);
+      });
+
+      ffmpeg.process.on("exit", (err) => {
+        console.log('Process ffmpeg exit');
+        console.log(err);
+      });
+
     }
 
     console.log('Process YOLO initialized');
@@ -108,6 +180,11 @@ module.exports = {
     } else {
       if(!YOLO.isStarted) {
         YOLO.process.start();
+	setTimeout(() => {
+          // start ffmpeg after 5s
+          ffserver.process.start();
+          ffmpeg.process.start();
+        }, 5000);
       }
     }
   },
@@ -127,6 +204,8 @@ module.exports = {
             resolve();
           });
           YOLO.process.stop();
+	  ffserver.process.stop();
+          ffmpeg.process.stop();
         }
       }
     });

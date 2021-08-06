@@ -1,8 +1,9 @@
 {
   "OPENDATACAM_VERSION": "3.0.1",
-  "PATH_TO_YOLO_DARKNET" : "/home/vagif/Documents/darknet",
+  "PATH_TO_YOLO" : "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/",
+  "DEEPSTREAM_CONFIG_FILE": "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_rtsp.txt",
+  "RECORDINGS_PATH": "/home/vagif/Downloads/recordings",
   "VIDEO_INPUT": "file",
-  "NEURAL_NETWORK": "yolov4-p6",
   "VIDEO_INPUTS_PARAMS": {
     "file": "/home/vagif/Downloads/Tlc00000-1.m4v",
     "usbcam": "v4l2src device=/dev/video0 ! video/x-raw, framerate=30/1, width=640, height=360 ! videoconvert ! appsink",
