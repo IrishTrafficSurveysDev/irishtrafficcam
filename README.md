@@ -1,17 +1,17 @@
-# ☘️ Irish Traffic Cam - Official Setup Guide
+# ☘️ Irish Traffic Cam - Deepstream Seup
 
 ### 🎬 Introduction
-- IrishTrafficCam is a customized implementation of [OpenDataCam](https://github.com/opendatacam/opendatacam). This guide will serve as a concrete step-by-step documentation on how to setup Irish Traffic Cam onto a Jetson TX2 using a Virtual Machine that is running in Ubuntu.
+
+This is an  experimental fork that aims to replace Darknet with the Deepstream SDK in order for increased speed, accuracy and performance for IrishTrafficCam. In order to achieve this, a series of patches and code modifications are required. This documentation will guide you through the necessary steps for implementing Deepstream with IrishTrafficCam.
 
 ### 📚 Documentation Layout
 - There are 2 essential parts to this guide:
-  - Part 1 of this guide will outline the necessary steps needed to flash [Jetpack SDK](https://developer.nvidia.com/embedded/jetpack) onto Jetson TX2, which is required in order to run OpenDataCam([Source](https://github.com/opendatacam/opendatacam#2-install-and-start-opendatacam-))
-  - Part 2 of this guide will outline the necessary steps needed to initialize OpenDataCam on a Jetson TX2 that is running Jetpack
-
+  - Part 1 of this guide will outline the necessary steps needed to flash [Jetpack SDK](https://developer.nvidia.com/embedded/jetpack) onto Jetson TX2, which is required in order to run IrishTrafficCam
+  - Part 2 of this guide will outline the necessary steps needed to integrate Deepstream with IrishTrafficCam
 
 ## ⚡️ Part 1 - Flashing Jetpack onto Jetson TX2
 
-- Before you can run OpenDataCam on a Jetson TX2, you will need to flash Jetpack onto Jetson TX2, as OpenDataCam requires the use of certian libraries that come with Jetpack. This means that in order to flash Jetpack, you will need a **host machine**, as well as a **target machine**(Jetson TX2).
+- Before you can run IrishTrafficCam on a Jetson TX2, you will need to flash Jetpack onto Jetson TX2, as IrishTrafficCam requires the use of certian libraries that come with Jetpack. This means that in order to flash Jetpack, you will need a **host machine**, as well as a **target machine**(Jetson TX2).
 
 ### 💻 Part 1 A): Hardware Requirements
   - **A Host computer** from which you can run the necessary software to flash Jetpack. You **must** ensure that the host machine is running **Ubuntu** with a version of Ubuntu **greater than 16.04 and less than 20.04**. At the time of writing(July 2021), Ubuntu 16.04 has reached end of life, and Jetpack is currently not supported for Ubuntu 20.04. The best Ubuntu version to run is 18.04. If you do not have a Ubuntu machine, please follow the guide on [running Ubuntu on a virutal machine](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Ubuntu-VM-Setup-Guide.md)
@@ -34,108 +34,65 @@
 ### 🚀 Part 1 C): Flashing Jetpack onto Jetson TX2
 - [This Video](https://www.youtube.com/watch?v=D7lkth34rgM&t=1s) is hands-down the best tutorial for flashing Jetpack onto Jetson TX2. Please follow this video **exactly**, including the fact that the instructor followed the instructions for **manual installation instead of automatic installation**, as automatic installation created some problems with the setup procedure. In summary, follow the video exactly!
 
-## 🎯 Part 2 - Installing and running IrishTrafficCam
+## 🎯 Part 2: Integrating Deepstream with IrishTrafficCam
 
-- For installing and running OpenDataCam, there are 2 setup options available:
-  - An option to setup OpenDataCam **with Docker**
-  - An option to setup OpenDataCam **without Docker**
+#### 1️⃣ Step 1: Install ffmpeg & patch ffserver
 
-### 🌀 Part 2 - Option A: Setup IrishTrafficCam *without* Docker (Recommended)
-- You can follow our [guide](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/OpenDataCam_CuDNN_Setup.md) on setting up IrishTrafficCam without Docker, which is more accurate and customized than the [official guide](https://github.com/opendatacam/opendatacam/blob/master/documentation/USE_WITHOUT_DOCKER.md) 
+●	 A) Install ffmpeg
+
+    sudo apt-get install ffmpeg
+    
+●	 B) Clone this specific branch of the repository:
+
+    
+    git clone --single-branch --branch deepstream_test https://github.com/IrishTrafficSurveysDev/irishtrafficcam.git
+    
 
 
-### 🐋 Part 2 - Option B: Setup IrishTrafficCam *with* Docker
-- While the OpenDataCam documentation states that there is no Docker Build support for Jetson TX2, there actually is for TX2 versions with Jetpack 4.5 installed!
-- To setup OpenDataCam without Docker, follow the official [quick setup guide](https://github.com/opendatacam/opendatacam#-get-started-quick-setup) and follow the instructions and docker build for a Jetson Nano. According to [this](https://github.com/opendatacam/opendatacam/issues/416) issue, the Jetson Nano Docker image should work on TX2 as well. However, note that the Docker image that is provided by OpenDataCam is **not optimized**. That is whe we recommend setting up IrishTrafficCam *without* Docker
+●	C) Patch ffserver
 
-#### 🔧 Setup IrishTrafficCam without Docker - Precautions
-- **If you get an error that is similar to [this](https://github.com/opendatacam/opendatacam/issues/268)**: This is a problem with OpenDataCam's outdated fork of Darknet, as well as s compatibility issue with CUDA and cuDNN, according to the moderator of Darknet, which happens to be a dependency of OpenDataCam([Source](https://github.com/AlexeyAB/darknet/issues/7205#issuecomment-755837883))
-  - To combat this, you can try 2 approached:
-    1. 🔘 **Option 1:** Disable cuDNN in your `Makefile`.
-        1. Locate your `Makefile` (`/path/to/darket/Makefile`) and open it in a text editor
-        2. Set the `CUDNN` option to 0
-    2. 🔘 (Recommended) **Option 2:** Follow [this](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/OpenDataCam_CuDNN_Setup.md) tutorial for running OpenDataCam on Jetson TX2 with cuDNN enabled. Note that this tutorial will guide you through the setup **without** using Docker
-  
-#### :question: Which YOLO model should I use?
-- By default, IrishTrafficCam already comes setup with configurations for several YOLO Object Detection models listed below. All you are required to do is download the weights of the model you wish to use, which is highlighted in [this](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/OpenDataCam_CuDNN_Setup.md#download-weight-file) section of the guide. We modified the Bounding Box size of our object detection models for more accuracy, so be sure to clone our [Darknet fork](https://github.com/IrishTrafficSurveysDev/darknet) when going through the setup. For convenience, We have ranked all default models by their accuracy(you can find out more about accuracy metrics [here](https://github.com/AlexeyAB/darknet#geforce-rtx-2080-ti)):
-  1. 🔘 `yolov4-p6` (default)(512x512)
-  3. 🔘 `yolov4-p5`(512x512)
-  4. 🔘 `yolov4-csp-x-swish`(512x512)
-  5. 🔘 `yolov4-csp-swish`(512x512)
-  6. 🔘 `yolov4-csp`(512x512)
-  7. 🔘 `yolo-v4`(416x416)
-  8. 🔘 `yolov4-tiny`(416x416)
-
-- However, tihs does not mean that `yolov4-p6` is the is the best model for all tasks at hand. It has proved to be most accurate for **fasty-moving cars** in videos, but for slower videos, `yolov4-p5` or `yolov4-csp-x-swish` may be better suited, as there is faster inference time. So, before configuring YOLO, be sure to try out various models. If ever unsure, we recommend sticking with the default
--  To find out more about other models and choosing your own custom YOLO model, please see the section of the documentation on [using Custom Neural Network weights for Object Detection](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Using-Custom-NN-Weights.md)
-
-#### 💢 (Optional,  only for Part 2 - Option A) Setting the Jetson TX2 to its highest performance setting for running IrishTrafficCam
-- It's possible to tweak Jetson TX2 so that it uses all GPU and CPU power to its highest capability. To do so, run the following commands before starting OpenDataCam(i.e before running `npm run start`):
- ``` shell
-sudo nvpmodel -m 0
-sudo jetson_clocks 
-```
-- Note than these command must be run with admin privilages, hence the `sudo`. In case you are wondering what these commands do:
-  - the first command(`nvpmodel`) is used to change the power management “profiles”, you can find more info about it [here](https://www.jetsonhacks.com/2017/03/25/nvpmodel-nvidia-jetson-tx2-development-kit/):
-  - The second command (`jetson_clocks`) that it is used to set max frequencies to CPU, GPU and EMC clocks.
-
-#### 🔥 (Optional, only for Part 2 - Option A) Create a Desktop file to launch IrishTrafficCam in a double click
-- Although not necessary, it is possible to create a Desktop script and configure OpenDataCam to run after a double click, as well as set Jetson TX2 to its highest performance setting for running OpenDataCam. To do so, this is the process you should follow( **Note** that if you cloned this repo during your setup you can jump over to step 6):
-  1. Open a terminal, and change directory into your `opendatacam` folder.
-  2. From here, run the command `npm i open` to install the [open](https://www.npmjs.com/package/open) library
-  3. Open the `server.js` file, and add the line `const open = require('open');` to the top of the file with all the imports
-  4. Find the following block of code in the `server.js` file:
-  </br>
+    sudo cp -r <PATH_TO_IRISHTRAFFICCAM>/deepstream_patch/ffserver.conf /etc/ffserver.conf
    
-  ``` javascript
-  server.listen(port, (err) => {
-  if (err) throw err
-  if (port === 80) {
-    console.log(`> Ready on http://localhost`)
-    console.log(`> Ready on http://${ip.address()}`)
-  } else {
-    console.log(`> Ready on http://localhost:${port}`)
-    console.log(`> Ready on http://${ip.address()}:${port}`)
-  }
-  })
-  })
+#### 2️⃣ Step 2: Install Deepstream
+
+● A) Download Deepstream from this [link](https://developer.nvidia.com/deepstream-download) and make sure to get debian file for Jetson. The version used at the time of writing was Deepstream **5.1**. Note that Deepstream 5.1 **requires** Jetpack 4.5.1
+
+● B) Install Deepstream:
+
+    sudo apt-get update
+
+    sudo apt-get install --fix-broken
+
+    sudo apt-get install \
+       	libssl1.0.0 \
+    	libgstreamer1.0-0 \
+    	gstreamer1.0-tools \
+    	gstreamer1.0-plugins-good \
+   	gstreamer1.0-plugins-bad \
+    	gstreamer1.0-plugins-ugly \
+    	gstreamer1.0-libav \
+    	libgstrtspserver-1.0-0 \
+    	libjansson4=2.11-1
+
+    sudo apt-get install <deepstream debian file>
+Please refer to the [official docs](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html#install-the-deepstream-sdk) for additional methods of installing Deepstream onto a Jetson Device
+
+#### 3️⃣ Step 3: Patch Deepstream - Copy Detection Module
+
+- If you want to have  **video stream** as input for IrishTrafficCam with Deepstream, then run the following command:
+```
+sudo cp -rv <PATH_TO_OPENDATACAM>/deepstream_patch/deepstream_app_config_yoloV3_tiny_http_rtsp.txt /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+export CUDA_VER=10.2
+make -C nvdsinfer_custom_impl_Yolo
   ```
-  5. Edit the code block so that is looks like the following:
-  </br>
-  
-  
-  ``` javascript
-  server.listen(port, (err) => {
-  if (err) throw err
-  if (port === 80) {
-    console.log(`> Ready on http://localhost`)
-    console.log(`> Ready on http://${ip.address()}`)
-    open(`http://${ip.address()}`)
-  } else {
-    console.log(`> Ready on http://localhost:${port}`)
-    console.log(`> Ready on http://${ip.address()}:${port}`)
-    open(`http://localhost:${port}`)
-  }
-  })
-  })
+- If you want to have  **a video file** as input for IrishTrafficCam with Deepstream, then:
+  - 1. Edit the `deepstream_app_config_yoloV3_tiny_http_uri.txt` file inside the **deepstream_patch** folder and replace the `uri` property(located at the `[source0]` section of the documentation) with the URI of the desired video file 
+  -  2. Run the following command:
+```
+sudo cp -rv <PATH_TO_OPENDATACAM>/deepstream_patch/deepstream_app_config_yoloV3_tiny_http_uri.txt /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+export CUDA_VER=10.2
+make -C nvdsinfer_custom_impl_Yolo
   ```
-  6. Download and open the file called [`Start_ITC.desktop`](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Start-ITC.desktop). Open the file in a text editor, and change the `/path/to/your/opendatacam/` to the path of your `opendatacam` folder. This file also contains the 2 command described abhove for setting the Jetson TX2 to run OpenDataCam at its highest performance settings.
-  7. Right click on the file, select Properties, give it read and write permissions, and check the `Allow executing file as a program` option.
-  8. Double Click the file, click `Trust and Launch` and enter your computer password to give admin rights if prompted to do so, and voila!
-
-
-
-## 💥 Customizing IrishTrafficCam
-- You can read [this](https://github.com/opendatacam/opendatacam/blob/master/documentation/CONFIG.md) section of the OpenDataCam documentation to learn more about customizing IrishTrafficCam to suit your needs. We have provided some of our own customizations that you can browse:
-  - 🔘 [Use Custom Neural Network weights for Object Detection](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/blob/master/Using-Custom-NN-Weights.md)
-
-### 📋 Customization Task List
-- [x] Set Jetson TX2 to perform at its highest performance settings when running OpenDataCam
-- [x] Fork darknet and customize it to support CuDNN for Jetson TX2 
-- [x] Change Default model from `yolov4` to `yolov4-csp` for better speed & accuracy 
-
-- 🔘 You can view the whole customization Kanban Board [here](https://github.com/IrishTrafficSurveysDev/Irish-Traffic-Cam-Guide/projects/2)
-
-
-##  🎥 Resources
-- Watch [this](https://vimeo.com/346340651) Vimeo to get a better understanding of the various settings of OpenDataCam.
+  
