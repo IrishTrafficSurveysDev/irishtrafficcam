@@ -165,37 +165,37 @@ sudo cp -r <PATH_TO_IRISHTRAFFICCAM>/deepstream_patch/src_cpp/ /opt/nvidia/deeps
 - E)
   - *Part 1*: Locate the following file:  */opt/nvidia/deepstream/deepstream-4.0/sources/apps/sample_apps/deepstream-app/Makefile* and Replace all lines after  the line *all: $(APP)* (including that line) with the following:
 
-CPPSRCDIR   = src_cpp
+		CPPSRCDIR   = src_cpp
 
-	SOURCES+= $(wildcard $(CPPSRCDIR)/*.cpp)
+		SOURCES+= $(wildcard $(CPPSRCDIR)/*.cpp)
 
-	INCLUDES+= $(wildcard $(CPPSRCDIR)/*.h)
+		INCLUDES+= $(wildcard $(CPPSRCDIR)/*.h)
 
-	OBJS+= $(SOURCES:$(CPPSRCDIR)/%.cpp=$(CPPSRCDIR)/%.o)
+		OBJS+= $(SOURCES:$(CPPSRCDIR)/%.cpp=$(CPPSRCDIR)/%.o)
 
-	CFLAGS+= -I $(CPPSRCDIR)
+		CFLAGS+= -I $(CPPSRCDIR)
 
-	CXX      = g++
-	CXXFLAGS +=  -Wall -ansi -g -std=c++11  -DPLATFORM_TEGRA
-	CXXFLAGS+= -I../../apps-common/includes -I../../../includes -I $(CPPSRCDIR) -DDS_VERSION_MINOR=0 -DDS_VERSION_MAJOR=4
+		CXX      = g++
+		CXXFLAGS +=  -Wall -ansi -g -std=c++11  -DPLATFORM_TEGRA
+		CXXFLAGS+= -I../../apps-common/includes -I../../../includes -I $(CPPSRCDIR) -DDS_VERSION_MINOR=0 -DDS_VERSION_MAJOR=4
 
-	CXXFLAGS+= `pkg-config --cflags $(PKGS)`
-
-
-	all: $(APP)
-
-	%.o: %.c $(INCS) Makefile
-		$(CC) -c -o $@ $(CFLAGS) $<
-	%.o: %.cpp $(INCS) Makefile
-		$(CXX) -c -o $@ $(CXXFLAGS) $<
+		CXXFLAGS+= `pkg-config --cflags $(PKGS)`
 
 
-	$(APP): $(OBJS) Makefile
-		$(CXX) -o $(APP) $(OBJS) $(LIBS)
+		all: $(APP)
 
-	clean:
-		rm -rf $(OBJS) $(APP)
--
+		%.o: %.c $(INCS) Makefile
+			$(CC) -c -o $@ $(CFLAGS) $<
+		%.o: %.cpp $(INCS) Makefile
+			$(CXX) -c -o $@ $(CXXFLAGS) $<
+
+
+		$(APP): $(OBJS) Makefile
+			$(CXX) -o $(APP) $(OBJS) $(LIBS)
+
+		clean:
+			rm -rf $(OBJS) $(APP)
+	-
   - *Part 2*: In the same file, replace the line `APP:= deepstream-app` to `APP:= deepstream-app2`
 
 - F) Build the Deepstream app by following the README located in */opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/*
