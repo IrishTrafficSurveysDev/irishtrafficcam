@@ -5,7 +5,7 @@
 This is an  experimental fork that aims to replace Darknet with the Deepstream SDK in order for increased speed, accuracy and performance for IrishTrafficCam. In order to achieve this, a series of patches and code modifications are required. This documentation will guide you through the necessary steps for implementing Deepstream with IrishTrafficCam.
 
 ### 📚 Documentation Layout
-- There are 2 essential parts to this guide:
+- There are 3 essential parts to this guide:
   - Part 1 of this guide will outline the necessary steps needed to flash [Jetpack SDK](https://developer.nvidia.com/embedded/jetpack) onto Jetson TX2, which is required in order to run IrishTrafficCam
   - Part 2 of this guide will outline the necessary steps needed to integrate Deepstream with IrishTrafficCam
   - Part 3 of this guide outlines the necessary steps needed to install & run IrishTrafficCam on a Jetson TX2 without deepstream & with CuDNN enabled
