@@ -417,3 +417,9 @@ sudo ufw allow 8070
 fatal error: cuda_runtime_api.h: No such file or directory
 ```
  - Please modify the `Makefile` (located at `/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/`) according to the instructions detailed [here](https://forums.developer.nvidia.com/t/fatal-error-cuda-runtime-api-h-no-such-file-or-directory-when-compiling-with-jetpack-4-5-1/171218).
+
+##### ❔ Troubleshooting problems with running Deepstream
+- If you get errors and are stuck at a loop when trying to run IrishTrafficCam with Deepstream, run the following command:
+``` bash
+sudo systemctl restart nvargus-daemon
+```
