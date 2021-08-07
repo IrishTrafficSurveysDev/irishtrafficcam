@@ -75,7 +75,7 @@ This is an  experimental fork that aims to replace Darknet with the Deepstream S
     	libgstrtspserver-1.0-0 \
     	libjansson4=2.11-1
 
-    sudo apt-get install <deepstream debian file>
+    sudo apt-get install ./<deepstream debian file>.deb
 Please refer to the [official docs](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_Quickstart.html#install-the-deepstream-sdk) for additional methods of installing Deepstream onto a Jetson Device
 
 #### 3️⃣ Step 3: Patch Deepstream - Copy Detection Module
@@ -361,7 +361,7 @@ sudo systemctl start mongod
 sudo systemctl enable mongod
 ```
 
-### 2. Install opendatacam-/irishtrafficcam
+### 2. Install irishtrafficcam
 
 
 - 🔵 Download source:
