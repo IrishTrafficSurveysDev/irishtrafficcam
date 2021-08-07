@@ -423,3 +423,6 @@ fatal error: cuda_runtime_api.h: No such file or directory
 ``` bash
 sudo systemctl restart nvargus-daemon
 ```
+
+##### ❕ Additional Troubleshooting
+- Please refer to the [official docs](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_troubleshooting.html) for troubleshooting Deepstream if you encounter any problems that are not mentioned above.
