@@ -316,7 +316,7 @@ CPPSRCDIR   = src_cpp
 
 ## ☄️ Part 3: Installing and running IrishTrafficCam with Deepstream
 
-### 1. Install node.js, mongodb
+### 1. Install node.js
 
 ```bash
 # Install node.js
@@ -325,7 +325,7 @@ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
-#### Mongodb for Jetson devices (ARM64):
+### 2. Install Mongodb for Jetson devices (ARM64):
 
 ```bash
 # Install mongodb
@@ -344,24 +344,7 @@ sudo systemctl start mongod
 sudo systemctl enable mongod
 ```
 
-#### Mongodb for Generic Ubuntu machine with CUDA GPU:
-
-```bash
-# Install mongodb
-
-# Detailed doc: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
-    echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-sudo apt-get update && apt-get install -y --no-install-recommends openssl libcurl3 mongodb-org
-
-# Start service
-sudo systemctl start mongod
-
-# Enable service on boot
-sudo systemctl enable mongod
-```
-
-### 2. Install irishtrafficcam
+### 3. Install irishtrafficcam
 
 
 - 🔵 Download source:
@@ -383,7 +366,7 @@ sudo systemctl enable mongod
 
 ```
 
-    ```
+ 
 - 🔵 Install  **IrishTrafficCam**
 
 ```bash
@@ -425,3 +408,12 @@ sudo ufw allow 8080
 sudo ufw allow 8090
 sudo ufw allow 8070
 ```
+
+#### ❓ Troulbeshooting
+
+##### ❔ Troubleshooting problems with the `Makefile`
+- If you get an error **similar** to the error below when following Part G) of [Step 4 of Patching Deepstream](https://github.com/IrishTrafficSurveysDev/irishtrafficcam/tree/deepstream_test#4%EF%B8%8F%E2%83%A3-step-4-patch-deepstream---modify-main-application) :
+``` bash
+fatal error: cuda_runtime_api.h: No such file or directory
+```
+ - Please modify the `Makefile` (located at `/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/`) according to the instructions detailed [here](https://forums.developer.nvidia.com/t/fatal-error-cuda-runtime-api-h-no-such-file-or-directory-when-compiling-with-jetpack-4-5-1/171218).
