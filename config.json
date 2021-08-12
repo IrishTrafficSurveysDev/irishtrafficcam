@@ -3,6 +3,8 @@
   "PATH_TO_YOLO" : "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/",
   "DEEPSTREAM_CONFIG_FILE": "/opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_uri.txt",
   "RECORDINGS_PATH": "/home/vagif/Downloads/recordings",
+  "PATH_TO_DEEPSTREAM_YOLO": "/home/vagif/Desktop/DeepStream-Yolo/native",
+  "DEEPSTREAM_YOLO_CONFIG_FILENAME": "deepstream_app_config.txt",
   "VIDEO_INPUT": "file",
   "VIDEO_INPUTS_PARAMS": {
     "file": "/home/vagif/Downloads/Tlc00000-1.m4v",

@@ -64,6 +64,13 @@ module.exports = {
         silent: true
       });
  
+     // for YOLOV4
+     //YOLO.process = new (forever.Monitor)(['/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/deepstream-app2', '-c', config.DEEPSTREAM_YOLO_CONFIG_FILENAME], {
+    //    max: Number.POSITIVE_INFINITY,
+    //    cwd: config.PATH_TO_DEEPSTREAM_YOLO,
+    //    killTree: true
+   //   });
+ 
      YOLO.process = new (forever.Monitor)(['../apps/sample_apps/deepstream-app/deepstream-app2', '-c', config.DEEPSTREAM_CONFIG_FILE], {
         max: Number.POSITIVE_INFINITY,
         cwd: config.PATH_TO_YOLO,
