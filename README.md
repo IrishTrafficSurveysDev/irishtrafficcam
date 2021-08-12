@@ -120,7 +120,7 @@ wget https://pjreddie.com/media/files/yolov3.weights -q --show-progress
 ```
 
 - B) 
-  - *Part 1*:  Add the folowing lines to the file located at: */opt/nvidia/deepstream/deepstream-5.2/sources/apps/sample_apps/deepstream-app/deepstream_app.c*:
+  - *Part 1*:  Add the folowing lines to the file located at: */opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/deepstream_app.c*:
 
 ```
 #define JSON_PORT 8070
@@ -203,13 +203,13 @@ sudo cp -r <PATH_TO_IRISHTRAFFICCAM>/deepstream_patch/src_cpp/ /opt/nvidia/deeps
 - G) Run deepstream to generate the tensorRT engine:
  - For video stream input:
  ```
- cd /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/
-../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_rtsp.txt
+ cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_rtsp.txt
  ```
  - For video file input:
  ```
- cd /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/
-../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_uri.txt
+ cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
+../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_uri.txt
  ```
  
  *Expected output (press Q after the build is completed to stop deepstream-app. The output does not have to match as long as no errors occurred):*
