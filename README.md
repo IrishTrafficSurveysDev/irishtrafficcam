@@ -203,12 +203,12 @@ sudo cp -r <PATH_TO_IRISHTRAFFICCAM>/deepstream_patch/src_cpp/ /opt/nvidia/deeps
 - G) Run deepstream to generate the tensorRT engine:
  - For video stream input:
  ```
- cd /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/
+ cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
 ../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_rtsp.txt
  ```
  - For video file input:
  ```
- cd /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/
+ cd /opt/nvidia/deepstream/deepstream-5.1/sources/objectDetector_Yolo/
 ../apps/sample_apps/deepstream-app/deepstream-app2 -c /opt/nvidia/deepstream/deepstream-4.0/sources/objectDetector_Yolo/deepstream_app_config_yoloV3_tiny_http_uri.txt
  ```
  
