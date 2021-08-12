@@ -419,7 +419,18 @@ fatal error: cuda_runtime_api.h: No such file or directory
  - Please modify the `Makefile` (located at `/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-app/`) according to the instructions detailed [here](https://forums.developer.nvidia.com/t/fatal-error-cuda-runtime-api-h-no-such-file-or-directory-when-compiling-with-jetpack-4-5-1/171218).
 
 ##### ❔ Troubleshooting problems with running Deepstream
-- If you get errors and are stuck at a loop when trying to run IrishTrafficCam with Deepstream, run the following command:
+- If you get errors similar to the error below:
+
+```
+(deepstream-app2:20618): GStreamer-CRITICAL **: 11:56:30.062: gst_mini_object_set_qdata: assertion 'object != NULL' failed ** INFO: <bus_callback:208>: Received EOS. Exiting ...
+```
+
+and are stuck at a loop when trying to run IrishTrafficCam with Deepstream, then run the following commands:
+
+```bash
+sudo service nvargus-daemon restart
+```
+
 ``` bash
 sudo systemctl restart nvargus-daemon
 ```
